@@ -1,0 +1,106 @@
+version: '3'
+
+x-resident: &resident
+  restart: unless-stopped
+  user: nobody
+  logging:
+    driver: json-file
+    options:
+      max-size: 128m
+      max-file: 4
+
+services:
+  op-geth:
+    <<: *resident
+    image: ghcr.io/oasysgames/oasys-op-geth:latest
+    entrypoint: geth
+    command: >
+      --http
+      --http.corsdomain='*'
+      --http.vhosts='*'
+      --http.addr=0.0.0.0
+      --http.port=8545
+      --http.api=web3,eth,net,engine
+      --ws
+      --ws.origins='*'
+      --ws.addr=0.0.0.0
+      --ws.port=8546
+      --ws.api=debug,eth,net,engine
+      --syncmode=full
+      --gcmode=archive
+      --cache=4096
+      --nodiscover
+      --maxpeers=0
+      --networkid=$OP_CHAIN_ID
+      --authrpc.vhosts='*'
+      --authrpc.addr=0.0.0.0
+      --authrpc.port=8551
+      --authrpc.jwtsecret=/assets/jwt.txt
+      --txpool.pricelimit=0
+    volumes:
+      - ./assets:/assets:ro
+      - ./data/op-geth:/home/nobody/.ethereum
+    ports:
+      - $OP_ETH_RPC_HTTP_PORT:8545/tcp
+      - $OP_ETH_RPC_WS_PORT:8546/tcp
+
+  op-node:
+    <<: *resident
+    image: ghcr.io/oasysgames/oasys-opstack/op-node:latest
+    entrypoint: op-node
+    command: >
+      --l1=$L1_ETH_RPC_HTTP
+      --l1.rpckind=basic
+      --l1.epoch-poll-interval=0
+      --l1.http-poll-interval=15s
+      --l2=$OP_ENGINE_RPC
+      --l2.jwt-secret=/assets/jwt.txt
+      --rollup.config=/data/rollup.json
+      --sequencer.enabled
+      --sequencer.l1-confs=5
+      --verifier.l1-confs=5
+      --rpc.enable-admin
+      --rpc.addr=0.0.0.0
+      --rpc.port=8547
+      --rpc.admin-state=/data/admin-state
+      --snapshotlog.file=/data/snapshotlog
+      --p2p.disable
+    volumes:
+      - ./assets:/assets:ro
+      - ./data/op-node:/data
+    links:
+      - op-geth
+
+  op-batcher:
+    <<: *resident
+    image: ghcr.io/oasysgames/oasys-opstack/op-batcher:latest
+    entrypoint: op-batcher
+    command: >
+      --l1-eth-rpc=$L1_ETH_RPC_HTTP
+      --l2-eth-rpc=$OP_ETH_RPC_HTTP
+      --rollup-rpc=$OP_ROLLUP_RPC
+      --private-key=$OP_BATCHER_KEY
+      --num-confirmations=5
+      --resubmission-timeout=60s
+      --txmgr.receipt-query-interval=15s
+    links:
+      - op-geth
+      - op-node
+
+  op-proposer:
+    <<: *resident
+    image: ghcr.io/oasysgames/oasys-opstack/op-proposer:latest
+    entrypoint: op-proposer
+    command: >
+      --l1-eth-rpc=$L1_ETH_RPC_HTTP
+      --rollup-rpc=$OP_ROLLUP_RPC
+      --l2oo-address=$OP_L2OO_ADDR
+      --private-key=$OP_PROPOSER_KEY
+      --allow-non-finalized=true
+      --num-confirmations=5
+      --resubmission-timeout=60s
+      --txmgr.receipt-query-interval=15s
+    links:
+      - op-node
+
+  # message-relayer: TODO
