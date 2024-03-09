@@ -1,0 +1,10 @@
+.env*
+.vscode
+.DS_Store
+
+/assets/*
+/data
+/docker-compose.override.yml
+
+!.gitkeep
+!.env.sample
