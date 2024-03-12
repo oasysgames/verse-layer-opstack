@@ -3,7 +3,9 @@
 .DS_Store
 
 /assets/*
+/assets.*
 /data
+/data.*
 /docker-compose.override.yml
 
 !.gitkeep
