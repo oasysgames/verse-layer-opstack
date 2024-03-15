@@ -106,5 +106,31 @@ services:
     links:
       - op-node
 
+  verse-verifier:
+    <<: *resident
+    image: ghcr.io/oasysgames/verse-verifier:v0.0.11-2b65c96
+    entrypoint: >
+      oasvlfy
+        --config.cli
+        --config.datastore=/data
+        --config.hub.chain_id=$L1_CHAIN_ID
+        --config.hub.rpc=$L1_ETH_RPC_HTTP
+        --config.p2p.listens=/ip4/0.0.0.0/tcp/$VERIFIER_P2P_PORT
+        --config.p2p.listens=/ip4/0.0.0.0/udp/$VERIFIER_P2P_PORT/quic
+        --config.verse
+        --config.verse.chain_id=$OP_CHAIN_ID
+        --config.verse.rpc=$OP_ETH_RPC_WS
+        --config.verse.l2oo=$OP_L2OO_ADDR
+        --config.submitter
+        --config.submitter.targets=$OP_CHAIN_ID
+        --config.submitter.wallet.address=$VERIFY_SUBMITTER_ADDR
+        --config.submitter.wallet.plain=$VERIFY_SUBMITTER_KEY
+        $VERIFIER_EXTRA_ARGS
+    command: start
+    volumes:
+      - ./data/verse-verifier:/data
+    ports:
+      - $VERIFIER_P2P_PORT:$VERIFIER_P2P_PORT/tcp
+      - $VERIFIER_P2P_PORT:$VERIFIER_P2P_PORT/udp
+
   # message-relayer: TODO
-  # instant-verifier: TODO
