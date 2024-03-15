@@ -4,8 +4,8 @@ Docker configuration for running the OPSack version of Verse Layer middleware.
 ## Place build artifacts
 Place `deploy-config.json` and `addresses.json` files downloaded from the [verse build tool](https://tools-fe.oasys.games/) into the assets directory.
 ```shell
-mv /downloads/deploy-config.json ./assets
-mv /downloads/addresses.json ./assets
+mv /download-path/deploy-config.json ./assets
+mv /download-path/addresses.json ./assets
 ```
 
 ## Create `.env`
