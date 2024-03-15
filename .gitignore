@@ -9,4 +9,4 @@
 /docker-compose.override.yml
 
 !.gitkeep
-!.env.sample
+!.env.sample*

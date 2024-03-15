@@ -11,7 +11,11 @@ mv /downloads/addresses.json ./assets
 ## Create `.env`
 Create an environment variables file for containers. Please copy the sample file and edit it.
 ```shell
-cp .env.sample .env
+# Sample for mainnet
+cp .env.sample.mainnet .env
+
+# Sample for testnet
+cp .env.sample.testnet .env
 ```
 
 The `OP_L2OO_ADDR` is obtained from the `addresses.json`.
@@ -52,5 +56,5 @@ docker-compose run --rm --no-deps op-geth init /assets/genesis.json
 
 ## Run services
 ```shell
-docker-compose up -d op-geth op-node op-batcher op-proposer
+docker-compose up -d op-geth op-node op-batcher op-proposer verse-verifier
 ```
