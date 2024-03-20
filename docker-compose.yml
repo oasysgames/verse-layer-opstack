@@ -83,7 +83,8 @@ services:
       --rollup-rpc=$OP_ROLLUP_RPC
       --private-key=$OP_BATCHER_KEY
       --max-channel-duration=1
-      --num-confirmations=5
+      --max-pending-tx=4
+      --num-confirmations=4
       --resubmission-timeout=60s
       --txmgr.receipt-query-interval=15s
     links:
@@ -100,11 +101,36 @@ services:
       --l2oo-address=$OP_L2OO_ADDR
       --private-key=$OP_PROPOSER_KEY
       --allow-non-finalized=true
-      --num-confirmations=5
+      --num-confirmations=4
       --resubmission-timeout=60s
       --txmgr.receipt-query-interval=15s
     links:
       - op-node
+
+  message-relayer:
+    <<: *resident
+    image: ghcr.io/oasysgames/opstack-message-relayer:v0.0.0-7a30ff2
+    command: ['./node_modules/.bin/tsx', './src/service.ts']
+    stop_grace_period: 2m30s # wait for all the multi-call transactions to be processed
+    environment:
+      MESSAGE_RELAYER__LOG_LEVEL: info
+      MESSAGE_RELAYER__LOOP_INTERVAL_MS: 5000
+      MESSAGE_RELAYER__L1_RPC_PROVIDER: $L1_ETH_RPC_HTTP
+      MESSAGE_RELAYER__L2_RPC_PROVIDER: $OP_ETH_RPC_HTTP
+      MESSAGE_RELAYER__ADDRESS_MANAGER: $OP_AM_ADDR
+      MESSAGE_RELAYER__L1_CROSS_DOMAIN_MESSENGER: $OP_L1CDM_ADDR
+      MESSAGE_RELAYER__PORTAL_ADDRESS: $OP_PORTAL_ADDR
+      MESSAGE_RELAYER__OUTPUT_ORACLE: $OP_L2OO_ADDR
+      MESSAGE_RELAYER__MULTICALL_ADDRESS: 0x5200000000000000000000000000000000000022
+      MESSAGE_RELAYER__PROVER_PRIVATE_KEY: $MR_PROVER_KEY
+      MESSAGE_RELAYER__FINALIZER_PRIVATE_KEY: $MR_FINALIZER_KEY
+      MESSAGE_RELAYER__STATE_FILE_PATH: /app/state/state.json
+      MESSAGE_RELAYER__QUEUE_PATH=: /data/store
+    volumes:
+      - ./data/message-relayer/state:/app/state
+      - ./data/message-relayer/store:/app/store
+    ports:
+      - $RELAYER_HTTP_PORT:7300/tcp
 
   verse-verifier:
     <<: *resident
@@ -133,4 +159,3 @@ services:
       - $VERIFIER_P2P_PORT:$VERIFIER_P2P_PORT/tcp
       - $VERIFIER_P2P_PORT:$VERIFIER_P2P_PORT/udp
 
-  # message-relayer: TODO

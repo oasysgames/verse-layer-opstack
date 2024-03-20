@@ -36,6 +36,18 @@ Create the JWT secret used for authentication between `op-node` and `op-geth`. T
 ```shell
 openssl rand -hex 32 > ./assets/jwt.txt
 ```
+---
+It's crucial to emphasize that **the following steps must be executed in sequence without any delay between each step** up to the `Run services` point. If you pause or stop at any step, it's advisable to delete all data by removing the ./data folder to ensure a clean state.
+---
+## Updating deploy-config.json
+Update the latest Layer 1 (L1) height to the most recent height.
+```sh
+# Set the shell script to be executable
+chmod 744 update-deploy-config.sh
+
+# Execute the script
+./update-deploy-config.sh
+```
 
 ## Generate chain configurations
 Generates `genesis.json` and `rollup.json` into the assets directory.
