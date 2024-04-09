@@ -10,3 +10,6 @@
 
 !.gitkeep
 !.env.sample*
+
+node_modules
+.local
