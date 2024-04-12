@@ -37,10 +37,10 @@ async function main() {
   ];
 
   const contract = new ethers.Contract(contractAddress, contractABI, wallet);
-  const blockNumber = argv['starting-blocknumber'] || await provider.getBlockNumber();
+  const blockNumber = argv['starting-blocknumber'] || 0;
 
    // Fetch the block for timestamp
-   const block = await provider.getBlock(blockNumber);
+   const block = await provider.getBlock('latest');
    const blockTime = block.timestamp;
 
   // Execute the contract function
