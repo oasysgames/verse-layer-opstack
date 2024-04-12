@@ -48,7 +48,7 @@ services:
 
   op-node:
     <<: *resident
-    image: ghcr.io/oasysgames/oasys-opstack/op-node:v0.0.0-f975e8f80
+    image: ghcr.io/oasysgames/oasys-opstack/op-node:v0.0.0-6e16e035
     entrypoint: op-node
     command: >
       --l1=$L1_ETH_RPC_HTTP
@@ -75,7 +75,7 @@ services:
 
   op-batcher:
     <<: *resident
-    image: ghcr.io/oasysgames/oasys-opstack/op-batcher:v0.0.0-f975e8f80
+    image: ghcr.io/oasysgames/oasys-opstack/op-batcher:v0.0.0-6e16e035
     entrypoint: op-batcher
     command: >
       --l1-eth-rpc=$L1_ETH_RPC_HTTP
@@ -93,7 +93,7 @@ services:
 
   op-proposer:
     <<: *resident
-    image: ghcr.io/oasysgames/oasys-opstack/op-proposer:v0.0.0-f975e8f80
+    image: ghcr.io/oasysgames/oasys-opstack/op-proposer:v0.0.0-6e16e035
     entrypoint: op-proposer
     command: >
       --l1-eth-rpc=$L1_ETH_RPC_HTTP
@@ -109,7 +109,7 @@ services:
 
   message-relayer:
     <<: *resident
-    image: ghcr.io/oasysgames/opstack-message-relayer:v0.0.0-7a30ff2
+    image: ghcr.io/oasysgames/opstack-message-relayer:v0.0.0-614fdbda
     command: ['./node_modules/.bin/tsx', './src/service.ts']
     stop_grace_period: 2m30s # wait for all the multi-call transactions to be processed
     environment:
@@ -125,7 +125,7 @@ services:
       MESSAGE_RELAYER__PROVER_PRIVATE_KEY: $MR_PROVER_KEY
       MESSAGE_RELAYER__FINALIZER_PRIVATE_KEY: $MR_FINALIZER_KEY
       MESSAGE_RELAYER__STATE_FILE_PATH: /app/state/state.json
-      MESSAGE_RELAYER__QUEUE_PATH=: /data/store
+      MESSAGE_RELAYER__QUEUE_PATH: /app/store
     volumes:
       - ./data/message-relayer/state:/app/state
       - ./data/message-relayer/store:/app/store

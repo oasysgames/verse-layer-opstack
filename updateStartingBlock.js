@@ -45,7 +45,7 @@ async function main() {
 
   // Execute the contract function
   try {
-    console.log(`Updating starting block(=${blockNumber})...`);
+    console.log(`Updating starting block (number=${blockNumber}, time=${blockTime})...`);
     const tx = await contract.updateStartingBlock(blockNumber, blockTime);
     console.log(`Transaction hash: ${tx.hash}`);
 
