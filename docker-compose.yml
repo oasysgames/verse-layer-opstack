@@ -12,7 +12,7 @@ x-resident: &resident
 services:
   op-geth:
     <<: *resident
-    image: ghcr.io/oasysgames/oasys-op-geth:v0.0.0-389fd30
+    image: ghcr.io/oasysgames/oasys-op-geth:v1.0.0
     entrypoint: geth
     command: >
       --http
@@ -48,7 +48,7 @@ services:
 
   op-node:
     <<: *resident
-    image: ghcr.io/oasysgames/oasys-opstack/op-node:v0.0.0-6e16e035
+    image: ghcr.io/oasysgames/oasys-opstack/op-node:v1.0.0
     entrypoint: op-node
     command: >
       --l1=$L1_ETH_RPC_HTTP
@@ -75,7 +75,7 @@ services:
 
   op-batcher:
     <<: *resident
-    image: ghcr.io/oasysgames/oasys-opstack/op-batcher:v0.0.0-6e16e035
+    image: ghcr.io/oasysgames/oasys-opstack/op-batcher:v1.0.0
     entrypoint: op-batcher
     command: >
       --l1-eth-rpc=$L1_ETH_RPC_HTTP
@@ -93,7 +93,7 @@ services:
 
   op-proposer:
     <<: *resident
-    image: ghcr.io/oasysgames/oasys-opstack/op-proposer:v0.0.0-6e16e035
+    image: ghcr.io/oasysgames/oasys-opstack/op-proposer:v1.0.0
     entrypoint: op-proposer
     command: >
       --l1-eth-rpc=$L1_ETH_RPC_HTTP
@@ -109,7 +109,7 @@ services:
 
   message-relayer:
     <<: *resident
-    image: ghcr.io/oasysgames/opstack-message-relayer:v0.0.0-614fdbda
+    image: ghcr.io/oasysgames/opstack-message-relayer:v1.0.0
     command: ['./node_modules/.bin/tsx', './src/service.ts']
     stop_grace_period: 2m30s # wait for all the multi-call transactions to be processed
     environment:
