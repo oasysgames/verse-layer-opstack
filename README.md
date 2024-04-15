@@ -4,7 +4,7 @@ This repository offers Docker configurations for effortlessly running the Opstac
 2. Verifying Correct Startup of Verse
 3. Launch Your Verse
 4. Activate Instant Verify
-Please follow the steps below to get your Verse up and running. If you encounter any issues while building, please refer to the [QA section]().
+Please follow the steps below to get your Verse up and running. If you encounter any issues while building, please refer to the [QA](#frequently-asked-questions) section.
 
 ## Steps to Launch Verse
 Before beginning, ensure that the L1 contract sets have already been deployed, and you possess the necessary configuration files (`addresses.json`, `deploy-config.json`). If not, please refer to the contract sets deployment section in our [technical documentation](https://docs.oasys.games/docs/verse-developer/how-to-build-verse/manual).
@@ -130,7 +130,7 @@ docker-compose up -d verse-verifier
 ```
 
 ## Frequently Asked Questions
-##### When I restart the service, it takes about 5 to 10 minutes to start producing a new block. Is this normal?
+### When I restart the service, it takes about 5 to 10 minutes to start producing a new block. Is this normal?
 Yes, it's normal. When the op-node restarts, it begins to walk the L2 backwards from the unsafe L2 head until it finds an L2 block whose L1 origin is canonical. This process involves identifying finalized and safe L2 blocks. This backtracking stops if it finds a finalized L2 head. However, our L2 doesn't have finality, so it backtracks through a sequential window of 3600 blocks. This backtracking takes time. Please wait patiently until it finishes.
 
 During this process, you will see the following log in the op-node:
@@ -138,7 +138,8 @@ During this process, you will see the following log in the op-node:
 2024-04-13 09:44:43 t=2024-04-13T02:44:43+0000 lvl=info msg="Walking back L1Block by hash"      curr=0x97076d901ec6d79e3dcd1fcc1856c57309eda9c8fe3ac630391c028d72b53bfe:3233556 next=0x193fbd673363aa527ac2848086f09c8490e65469f2276ddb3e3593e3979c2ae5:3233555 l2block=0x049c131483a2d7421d8273a0c5fbe66d8f916b86f163775e254215243ba60928:3339
 ```
 
-##### The op-proposer outputs a  `block hash does not match` error repeatedly. How should I address this?
+---
+### The op-proposer outputs a  `block hash does not match` error repeatedly. How should I address this?
 If the error logs look like the following, you can address this issue by restarting the op-node with the `--omit-l1blockhash-in-proposals` flag:
 ```sh
 2024-04-14 10:05:56 t=2024-04-14T03:05:56+0000 lvl=warn msg="Failed to create a transaction, will retry" service=proposer err="failed to estimate gas: execution reverted: L2OutputOracle: block hash does not match the hash at the expected height"
@@ -154,7 +155,8 @@ op-proposer:
     --omit-l1blockhash-in-proposals
 ```
 
-##### How to Configure Services to Print Debug-Level Logs for Issue Identification
+---
+### How to Configure Services to Print Debug-Level Logs for Issue Identification
 Below is a table showing how to configure each service to output debug-level logs to help identify issues:
 
 |Service|Service|
@@ -166,10 +168,11 @@ Below is a table showing how to configure each service to output debug-level log
 |message-relayer|Set the `MESSAGE_RELAYER__LOG_LEVEL` environment variable to `debug`|
 |verse-verifier|Set the environment variable `DEBUG=1`|
 
-##### How to Discard All L2 Data and Restart?
+---
+### How to Discard All L2 Data and Restart?
 To start fresh with Layer 2, you can delete all outputs from L2OutputOracle and change the inbox address. This process is extremely risky, so please carefully consider alternative methods before proceeding.
 
-###### Delete All Outputs
+#### Delete All Outputs
 First, check the `nextOutputIndex` of L2OutputOracle. If it returns zero, you can skip this process. You can find the address of L2OutputOracle in the `L2OutputOracleProxy` within the `addresses.json`.
 ```solidity
 function nextOutputIndex() public view returns (uint256);
@@ -185,7 +188,7 @@ function deleteL2Outputs(uint256 _l2OutputIndex) external virtual;
 ```
 Finally, confirm that all outputs have been deleted by calling nextOutputIndex again.
 
-###### Change the Inbox Address
+#### Change the Inbox Address
 Manually update the inbox address in addresses.json and deploy-config.json.
 
 |File|Property|
@@ -202,4 +205,4 @@ Ensure that no transactions have ever been sent to this address, as required. As
 0xfF0000000000000000000000000000004ee9Ff01
 ```
 
-Once all changes are made, please restart your system by following the steps in the [Launch Your Verse]() section.
+Once all changes are made, please restart your system by following the steps in the [Launch Your Verse](#3-launch-your-verse) section.
