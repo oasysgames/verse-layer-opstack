@@ -125,7 +125,7 @@ services:
       MESSAGE_RELAYER__PROVER_PRIVATE_KEY: $MR_PROVER_KEY
       MESSAGE_RELAYER__FINALIZER_PRIVATE_KEY: $MR_FINALIZER_KEY
       MESSAGE_RELAYER__STATE_FILE_PATH: /app/state/state.json
-      MESSAGE_RELAYER__QUEUE_PATH=: /data/store
+      MESSAGE_RELAYER__QUEUE_PATH: /app/store
     volumes:
       - ./data/message-relayer/state:/app/state
       - ./data/message-relayer/store:/app/store
