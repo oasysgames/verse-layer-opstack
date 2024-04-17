@@ -170,7 +170,7 @@ curl http://127.0.0.1:8545/ \
   --data '{"method":"eth_getBlockByNumber","params":["<hex block number>",false],"id":1,"jsonrpc":"2.0"}' | jq .result.hash
 
 # replica block hash
-curl http://127.0.0.1:8545/ \
+curl http://127.0.0.1:18545/ \
   -X POST \
   -H "Content-Type: application/json" \
   --data '{"method":"eth_getBlockByNumber","params":["<hex block number>",false],"id":1,"jsonrpc":"2.0"}' | jq .result.hash
