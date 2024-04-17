@@ -129,6 +129,52 @@ Once the replica is set up, you can start the Instant Verifier by running:
 docker-compose up -d verse-verifier
 ```
 
+## Steps to Start a Replica Node
+First, copy the `rollup.json` and `genesis.json` files. If you do not have the original files, please contact the original Verse builder to obtain them.
+```shell
+cp assets/rollup.json assets-replica/
+cp assets/genesis.json assets-replica/
+```
+Generate a JWT secret.
+```shell
+openssl rand -hex 32 > ./assets-replica/jwt.txt
+```
+Initialize the Genesis Block.
+```shell
+docker-compose run --rm --no-deps op-geth-replica init /assets/genesis.json
+```
+Start the services.
+```sh
+docker-compose up -d op-geth-replica op-node-replica
+```
+Once running, and after sufficient time has passed, verify that the replica has caught up with the origin. It's important to note that since the replica constructs blocks from L1 data rolled up by the origin, it cannot catch up to the latest head of the origin. It will **always be approximately 100 blocks behind**.
+```sh
+# origin height
+curl http://127.0.0.1:8545/ \
+  -X POST \
+  -H "Content-Type: application/json" \
+  --data '{"method":"eth_blockNumber","params":[],"id":1,"jsonrpc":"2.0"}' | jq .result | xargs printf "%d\n"
+
+# replica height
+curl http://127.0.0.1:18545/ \
+  -X POST \
+  -H "Content-Type: application/json" \
+  --data '{"method":"eth_blockNumber","params":[],"id":1,"jsonrpc":"2.0"}' | jq .result | xargs printf "%d\n"
+```
+If the replica has caught up, the latest head block hash should match that of the origin.
+```sh
+curl http://127.0.0.1:8545/ \
+  -X POST \
+  -H "Content-Type: application/json" \
+  --data '{"method":"eth_getBlockByNumber","params":["<hex block number>",false],"id":1,"jsonrpc":"2.0"}' | jq .result.hash
+
+curl http://127.0.0.1:8545/ \
+  -X POST \
+  -H "Content-Type: application/json" \
+  --data '{"method":"eth_getBlockByNumber","params":["<hex block number>",false],"id":1,"jsonrpc":"2.0"}' | jq .result.hash
+```
+
+
 ## Frequently Asked Questions
 ### When I restart the service, it takes about 5 to 10 minutes to start producing a new block. Is this normal?
 Yes, it's normal. When the op-node restarts, it begins to walk the L2 backwards from the unsafe L2 head until it finds an L2 block whose L1 origin is canonical. This process involves identifying finalized and safe L2 blocks. This backtracking stops if it finds a finalized L2 head. However, our L2 doesn't have finality, so it backtracks through a sequential window of 3600 blocks. This backtracking takes time. Please wait patiently until it finishes.

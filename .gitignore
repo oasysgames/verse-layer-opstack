@@ -4,6 +4,7 @@
 
 /assets/*
 /assets.*
+/assets-replica/*
 /data
 /data.*
 /docker-compose.override.yml
