@@ -4,6 +4,7 @@ This repository offers Docker configurations for effortlessly running the Opstac
 2. Verifying Correct Startup of Verse
 3. Launch Your Verse
 4. Activate Verse Verifier
+
 Please follow the steps below to get your Verse up and running. If you encounter any issues while building, please refer to the [QA](#frequently-asked-questions) section.
 
 ## Steps to Launch Verse
