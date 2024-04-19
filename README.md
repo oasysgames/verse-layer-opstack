@@ -3,7 +3,8 @@ This repository offers Docker configurations for effortlessly running the Opstac
 1. Prepare Assets and Environment
 2. Verifying Correct Startup of Verse
 3. Launch Your Verse
-4. Activate Instant Verify
+4. Activate Verse Verifier
+
 Please follow the steps below to get your Verse up and running. If you encounter any issues while building, please refer to the [QA](#frequently-asked-questions) section.
 
 ## Steps to Launch Verse
@@ -124,8 +125,8 @@ Finally, launch your Verse by starting up the middleware components.
 docker-compose up -d op-geth op-node op-batcher op-proposer message-relayer
 ```
 
-### 4. Activate Instant Verify
-Instant Verify is our unique mechanism designed to expedite L2 withdrawals. Originally, the Optimistic Rollup required a 7-day waiting period to complete L2 withdrawals. By validating the L2 state with our L1 validator sets, we can bypass this waiting window.
+### 4. Activate Verse Verifier
+Verse Verifier is our unique mechanism designed to expedite L2 withdrawals. Originally, the Optimistic Rollup required a 7-day waiting period to complete L2 withdrawals. By validating the L2 state with our L1 validator sets, we can bypass this waiting window.
 
 To activate the Instant Verifier, please fill out the application form below. The Oasys team will then build a replica Verse on your system.
 - [To use instant verifier in verse(Mainnet)](https://docs.google.com/forms/d/1qlkMaL7RWIl09H0Zz0FH23To9cXJ0eIF5bHwhav8OzA/edit#response=ACYDBNjmRXkOBhy-xdFF76faASIJ8Twf_ZHCrhZgJmnMqkhTOY4m7x6uz7oJP6bEuKtaBO0)
