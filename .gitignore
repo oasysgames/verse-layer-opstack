@@ -4,9 +4,13 @@
 
 /assets/*
 /assets.*
+/assets-replica/*
 /data
 /data.*
 /docker-compose.override.yml
 
 !.gitkeep
 !.env.sample*
+
+node_modules
+.local

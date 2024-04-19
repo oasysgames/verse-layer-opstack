@@ -12,7 +12,7 @@ x-resident: &resident
 services:
   op-geth:
     <<: *resident
-    image: ghcr.io/oasysgames/oasys-op-geth:v0.0.0-389fd30
+    image: ghcr.io/oasysgames/oasys-op-geth:v1.0.0
     entrypoint: geth
     command: >
       --http
@@ -48,7 +48,7 @@ services:
 
   op-node:
     <<: *resident
-    image: ghcr.io/oasysgames/oasys-opstack/op-node:v0.0.0-f975e8f80
+    image: ghcr.io/oasysgames/oasys-opstack/op-node:v1.0.0
     entrypoint: op-node
     command: >
       --l1=$L1_ETH_RPC_HTTP
@@ -75,7 +75,7 @@ services:
 
   op-batcher:
     <<: *resident
-    image: ghcr.io/oasysgames/oasys-opstack/op-batcher:v0.0.0-f975e8f80
+    image: ghcr.io/oasysgames/oasys-opstack/op-batcher:v1.0.0
     entrypoint: op-batcher
     command: >
       --l1-eth-rpc=$L1_ETH_RPC_HTTP
@@ -93,7 +93,7 @@ services:
 
   op-proposer:
     <<: *resident
-    image: ghcr.io/oasysgames/oasys-opstack/op-proposer:v0.0.0-f975e8f80
+    image: ghcr.io/oasysgames/oasys-opstack/op-proposer:v1.0.0
     entrypoint: op-proposer
     command: >
       --l1-eth-rpc=$L1_ETH_RPC_HTTP
@@ -109,7 +109,7 @@ services:
 
   message-relayer:
     <<: *resident
-    image: ghcr.io/oasysgames/opstack-message-relayer:v0.0.0-7a30ff2
+    image: ghcr.io/oasysgames/opstack-message-relayer:v1.0.0
     command: ['./node_modules/.bin/tsx', './src/service.ts']
     stop_grace_period: 2m30s # wait for all the multi-call transactions to be processed
     environment:
@@ -125,7 +125,7 @@ services:
       MESSAGE_RELAYER__PROVER_PRIVATE_KEY: $MR_PROVER_KEY
       MESSAGE_RELAYER__FINALIZER_PRIVATE_KEY: $MR_FINALIZER_KEY
       MESSAGE_RELAYER__STATE_FILE_PATH: /app/state/state.json
-      MESSAGE_RELAYER__QUEUE_PATH=: /data/store
+      MESSAGE_RELAYER__QUEUE_PATH: /app/store
     volumes:
       - ./data/message-relayer/state:/app/state
       - ./data/message-relayer/store:/app/store
@@ -159,3 +159,63 @@ services:
       - $VERIFIER_P2P_PORT:$VERIFIER_P2P_PORT/tcp
       - $VERIFIER_P2P_PORT:$VERIFIER_P2P_PORT/udp
 
+  op-geth-replica:
+    <<: *resident
+    image: ghcr.io/oasysgames/oasys-op-geth:v1.0.0
+    entrypoint: geth
+    command: >
+      --http
+      --http.corsdomain='*'
+      --http.vhosts='*'
+      --http.addr=0.0.0.0
+      --http.port=8545
+      --http.api=web3,eth,net,engine
+      --ws
+      --ws.origins='*'
+      --ws.addr=0.0.0.0
+      --ws.port=8546
+      --ws.api=debug,eth,net,engine
+      --syncmode=full
+      --gcmode=archive
+      --cache=4096
+      --nodiscover
+      --maxpeers=0
+      --networkid=$OP_CHAIN_ID
+      --authrpc.vhosts='*'
+      --authrpc.addr=0.0.0.0
+      --authrpc.port=8551
+      --authrpc.jwtsecret=/assets/jwt.txt
+      --txpool.pricelimit=0
+    environment:
+      GETH_DATADIR: /data
+    volumes:
+      - ./assets-replica:/assets
+      - ./data/op-geth-replica:/data
+    ports:
+      - $OP_ETH_REPLICA_RPC_HTTP_PORT:8545/tcp
+      - $OP_ETH_REPLICA_RPC_WS_PORT:8546/tcp
+
+  op-node-replica:
+    <<: *resident
+    image: ghcr.io/oasysgames/oasys-opstack/op-node:v1.0.0
+    entrypoint: op-node
+    command: >
+      --l1=$L1_ETH_RPC_HTTP
+      --l1.rpckind=basic
+      --l1.epoch-poll-interval=0
+      --l1.http-poll-interval=15s
+      --l2=$OP_ENGINE_REPLICA_RPC
+      --l2.jwt-secret=/assets/jwt.txt
+      --rollup.config=/assets/rollup.json
+      --verifier.l1-confs=5
+      --rpc.enable-admin
+      --rpc.addr=0.0.0.0
+      --rpc.port=8547
+      --rpc.admin-state=/data/admin-state
+      --snapshotlog.file=/data/snapshotlog
+      --p2p.disable
+    volumes:
+      - ./assets-replica:/assets
+      - ./data/op-node-replica:/data
+    links:
+      - op-geth-replica
