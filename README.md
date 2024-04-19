@@ -55,6 +55,12 @@ $ oaspos crypto:create-account
 Address : 0xabcd1234...
 Key     : 0xabcd1234...
 ```
+Please fund at least 10 OAS to the following address. This address will send transactions to our L1 to cover the required gas fees:
+- OP_PROPOSER_ADDR
+- OP_BATCHER_ADDR
+- MR_PROVER_ADDR
+- MR_FINALIZER_ADDR
+- VERIFY_SUBMITTER_ADDR
 
 #### Install Dependencies
 Install the required dependencies to run the scripts.
