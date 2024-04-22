@@ -134,7 +134,7 @@ services:
 
   verse-verifier:
     <<: *resident
-    image: ghcr.io/oasysgames/verse-verifier:v0.0.11-2b65c96
+    image: ghcr.io/oasysgames/verse-verifier:v1.0.0
     entrypoint: >
       oasvlfy
         --config.cli
