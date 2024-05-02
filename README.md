@@ -46,6 +46,9 @@ jq .AddressManager ./assets/addresses.json
 # Retrieve OP_L1CDM_ADDR from addresses.json
 jq .L1CrossDomainMessengerProxy ./assets/addresses.json
 
+# Retrieve OP_L1BRIDGE_ADDR from addresses.json
+jq .L1StandardBridgeProxy ./assets/addresses.json
+
 # Retrieve OP_PORTAL_ADDR from addresses.json
 jq .OptimismPortalProxy ./assets/addresses.json
 ```
