@@ -166,6 +166,18 @@ op-proposer:
 ```
 
 ---
+### How Does L2 Reorgs in Accordance with L1 Reorgs?
+When L2 detects an L1 reorg, you will see the following warning log:
+```
+L1 head signal indicates a possible L1 re-org
+```
+Eventually, L2 discards its unsafe head, but this restructuring does not affect the L2 safe head. In other words, once L2 succeeds in delivering L2 blocks from L1, they should not be discarded without restarting.
+
+While you can mitigate this risk by specifying the L1 confirmation block numbers as a runtime option(`--verifier.l1-confs <number>`), we don't recommend this due to the rarity of L1 reorgs and the potential negative impact on performance.
+
+If an L1 reorg occurs, it is highly likely to be an L1 incident. We believe that restarting is the best option for dealing with L1 reorgs.
+
+---
 ### How to Configure Services to Print Debug-Level Logs for Issue Identification
 Below is a table showing how to configure each service to output debug-level logs to help identify issues:
 
