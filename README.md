@@ -181,6 +181,12 @@ While you can mitigate this risk by specifying the L1 confirmation block numbers
 If an L1 reorg occurs, it is highly likely to be an L1 incident. We believe that restarting is the best option for dealing with L1 reorgs.
 
 ---
+### Why does the transaction sender need to wait more than the block time even when the network is less crowded?
+The average actual expected waiting time is not 0.5 * blocktime but rather `1.5 * blocktime`. This additional one block time of waiting is caused by the side effects of architectural changes. Following the Ethereum architecture, OP Stack has separated the consensus layer from the execution layer. The execution node (op-geth) produces blocks as dictated by the consensus node (op-node).
+
+When the execution node receives a block creation request, it pick transactions from the txpool and packs them into a block. Then, the execution node waits for the block finalization request. This duration is almost equivalent to one block time, as the block creation request is typically sent immediately after the prior block is produced. This waiting period accounts for the additional waiting time experienced by transaction senders.
+
+---
 ### How to Configure Services to Print Debug-Level Logs for Issue Identification
 Below is a table showing how to configure each service to output debug-level logs to help identify issues:
 
