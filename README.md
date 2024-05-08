@@ -187,6 +187,10 @@ The average actual expected waiting time is not 0.5 * blocktime but rather `1.5 
 When the execution node receives a block creation request, it pick transactions from the txpool and packs them into a block. Then, the execution node waits for the block finalization request. This duration is almost equivalent to one block time, as the block creation request is typically sent immediately after the prior block is produced. This waiting period accounts for the additional waiting time experienced by transaction senders.
 
 ---
+### Why doesn't Metamask automatically set gas to zero?
+Our gasless setting Verse correctly returns zero in response to the `eth_gasPrice` request, and the `baseFeePerGas` property in the block is always zero. The issue lies within the library Metamask uses. Currently, Metamask is using ethers.js v5, which automatically sets a default gas price of 1,500,000,000. In contrast, ethers.js v6 correctly sets the gas price to zero. Upgrading the library version on the Metamask side would resolve this issue.
+
+---
 ### How to Configure Services to Print Debug-Level Logs for Issue Identification
 Below is a table showing how to configure each service to output debug-level logs to help identify issues:
 
