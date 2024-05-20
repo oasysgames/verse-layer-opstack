@@ -131,10 +131,17 @@ docker-compose up -d op-geth op-node op-batcher op-proposer message-relayer
 ### 4. Activate Verse Verifier
 Verse Verifier is our unique mechanism designed to expedite L2 withdrawals. Originally, the Optimistic Rollup required a 7-day waiting period to complete L2 withdrawals. By validating the L2 state with our L1 validator sets, we can bypass this waiting window.
 
-To activate the Instant Verifier, please fill out the application form below. The Oasys team will then build a replica Verse on your system.
-- [To use instant verifier in verse(Mainnet)](https://docs.google.com/forms/d/1qlkMaL7RWIl09H0Zz0FH23To9cXJ0eIF5bHwhav8OzA/edit#response=ACYDBNjmRXkOBhy-xdFF76faASIJ8Twf_ZHCrhZgJmnMqkhTOY4m7x6uz7oJP6bEuKtaBO0)
+To activate the Verse Verifier, please fill out the application form bellow.
+- [To use instant verifier in verse(Mainnet)](https://docs.google.com/forms/d/e/1FAIpQLSd21GXYp7c8LS-crUVTHZkaDBuEzDZfxJl78Zgb4Ejd7Dybjg/viewform)
+- [To use instant verifier in verse(Testnet)](https://docs.google.com/forms/d/e/1FAIpQLSc3B-1sq_ycxdOjFMvNwMIO4Z7FI1MYyaU4WPflbxf3U38OPg/viewform)
 
-Once the replica is set up, you can start the Instant Verifier by running:
+> [!NOTE]
+> An IP address whitelist is required **for testnet** instant verification
+> 
+> To activate instant verification on the testnet, please allow this IP address (`34.126.140.53`) to access your Verse RPC.
+> The validator side of the Instant Verifier on the testnet operates from this IP address and directly accesses your test Verse RPC, without using a replica node. Mainnet instant verifiers refer to the replica node built using L1 submitted data, so they do not require IP address whitelisting.
+
+Once the Oasys side settings are configured, you can start the Verse Verifier by running:
 ```sh
 docker-compose up -d verse-verifier
 ```
