@@ -12,7 +12,7 @@ x-resident: &resident
 services:
   op-geth:
     <<: *resident
-    image: ghcr.io/oasysgames/oasys-op-geth:v1.0.0
+    image: ghcr.io/oasysgames/oasys-op-geth:v1.1.0
     entrypoint: geth
     command: >
       --http
@@ -37,6 +37,7 @@ services:
       --authrpc.port=8551
       --authrpc.jwtsecret=/assets/jwt.txt
       --txpool.pricelimit=0
+      --rollup.superchain-upgrades=false
     environment:
       GETH_DATADIR: /data
     volumes:
@@ -48,7 +49,7 @@ services:
 
   op-node:
     <<: *resident
-    image: ghcr.io/oasysgames/oasys-opstack/op-node:v1.0.0
+    image: ghcr.io/oasysgames/oasys-opstack/op-node:v1.1.0
     entrypoint: op-node
     environment:
       OP_NODE_L1_ETH_RPC: $L1_ETH_RPC_HTTP
@@ -84,7 +85,7 @@ services:
 
   op-batcher:
     <<: *resident
-    image: ghcr.io/oasysgames/oasys-opstack/op-batcher:v1.0.0
+    image: ghcr.io/oasysgames/oasys-opstack/op-batcher:v1.1.0
     entrypoint: op-batcher
     command: >
       --l1-eth-rpc=$L1_ETH_RPC_HTTP
@@ -102,7 +103,7 @@ services:
 
   op-proposer:
     <<: *resident
-    image: ghcr.io/oasysgames/oasys-opstack/op-proposer:v1.0.0
+    image: ghcr.io/oasysgames/oasys-opstack/op-proposer:v1.1.0
     entrypoint: op-proposer
     command: >
       --l1-eth-rpc=$L1_ETH_RPC_HTTP
