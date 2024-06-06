@@ -37,6 +37,7 @@ services:
       --authrpc.port=8551
       --authrpc.jwtsecret=/assets/jwt.txt
       --txpool.pricelimit=0
+      --rollup.superchain-upgrades=false
     environment:
       GETH_DATADIR: /data
     volumes:
