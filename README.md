@@ -75,7 +75,7 @@ yarn install
 #### Pull Docker Containers
 Pull all the required Docker images for Verse middleware.
 ```shell
-docker-compose pull op-geth op-node op-batcher op-proposer message-relayer verse-verifier
+docker-compose pull op-geth op-node op-batcher op-proposer op-message-relayer verse-verifier
 ```
 
 ### 2. Verifying Correct Startup of Verse
@@ -125,7 +125,7 @@ Repeat the commands from the previous section.
 #### Run Services
 Finally, launch your Verse by starting up the middleware components.
 ```shell
-docker-compose up -d op-geth op-node op-batcher op-proposer message-relayer
+docker-compose up -d op-geth op-node op-batcher op-proposer op-message-relayer
 ```
 
 ### 4. Activate Verse Verifier
@@ -137,7 +137,7 @@ To activate the Verse Verifier, please fill out the application form bellow.
 
 > [!NOTE]
 > An IP address whitelist is required **for testnet** instant verification
-> 
+>
 > To activate instant verification on the testnet, please allow this IP address (`34.126.140.53`) to access your Verse RPC.
 > The validator side of the Instant Verifier on the testnet operates from this IP address and directly accesses your test Verse RPC, without using a replica node. Mainnet instant verifiers refer to the replica node built using L1 submitted data, so they do not require IP address whitelisting.
 
@@ -209,7 +209,7 @@ Below is a table showing how to configure each service to output debug-level log
 |op-geth|Include the `--verbosity=5` option in the start command line|
 |op-batcher|Same as op-node |
 |op-proposer|Same as op-node|
-|message-relayer|Set the `MESSAGE_RELAYER__LOG_LEVEL` environment variable to `debug`|
+|op-message-relayer|Set the `MESSAGE_RELAYER__LOG_LEVEL` environment variable to `debug`|
 |verse-verifier|Set the environment variable `DEBUG=1`|
 
 ---

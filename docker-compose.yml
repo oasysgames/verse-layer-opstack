@@ -117,7 +117,7 @@ services:
     links:
       - op-node
 
-  message-relayer:
+  op-message-relayer:
     <<: *resident
     image: ghcr.io/oasysgames/opstack-message-relayer:v1.0.1
     command: ['./node_modules/.bin/tsx', './src/service.ts']
