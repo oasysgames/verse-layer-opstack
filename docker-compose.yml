@@ -14,32 +14,31 @@ services:
     <<: *resident
     image: ghcr.io/oasysgames/oasys-op-geth:v1.1.0
     entrypoint: geth
-    command: >
-      --http
-      --http.corsdomain='*'
-      --http.vhosts='*'
-      --http.addr=0.0.0.0
-      --http.port=8545
-      --http.api=web3,eth,net,engine
-      --ws
-      --ws.origins='*'
-      --ws.addr=0.0.0.0
-      --ws.port=8546
-      --ws.api=debug,eth,net,engine
-      --syncmode=full
-      --gcmode=archive
-      --cache=4096
-      --nodiscover
-      --maxpeers=0
-      --networkid=$OP_CHAIN_ID
-      --authrpc.vhosts='*'
-      --authrpc.addr=0.0.0.0
-      --authrpc.port=8551
-      --authrpc.jwtsecret=/assets/jwt.txt
-      --txpool.pricelimit=0
-      --rollup.superchain-upgrades=false
     environment:
       GETH_DATADIR: /data
+      GETH_HTTP: 'true'
+      GETH_HTTP_CORSDOMAIN: '*'
+      GETH_HTTP_VHOSTS: '*'
+      GETH_HTTP_ADDR: 0.0.0.0
+      GETH_HTTP_PORT: 8545
+      GETH_HTTP_API: net,eth,web3
+      GETH_WS: 'true'
+      GETH_WS_ORIGINS: '*'
+      GETH_WS_ADDR: 0.0.0.0
+      GETH_WS_PORT: 8546
+      GETH_WS_API: net,eth,web3
+      GETH_SYNCMODE: full
+      GETH_GCMODE: archive
+      GETH_CACHE: 4096
+      GETH_NODISCOVER: 'true'
+      GETH_MAXPEERS: 0
+      GETH_NETWORKID: $OP_CHAIN_ID
+      GETH_AUTHRPC_VHOSTS: '*'
+      GETH_AUTHRPC_ADDR: 0.0.0.0
+      GETH_AUTHRPC_PORT: 8551
+      GETH_AUTHRPC_JWTSECRET: /assets/jwt.txt
+      GETH_TXPOOL_PRICELIMIT: 0
+      GETH_ROLLUP_SUPERCHAIN_UPGRADES: 'false'
     volumes:
       - ./assets:/assets
       - ./data/op-geth:/data
@@ -87,16 +86,16 @@ services:
     <<: *resident
     image: ghcr.io/oasysgames/oasys-opstack/op-batcher:v1.1.0
     entrypoint: op-batcher
-    command: >
-      --l1-eth-rpc=$L1_ETH_RPC_HTTP
-      --l2-eth-rpc=$OP_ETH_RPC_WS
-      --rollup-rpc=$OP_ROLLUP_RPC
-      --private-key=$OP_BATCHER_KEY
-      --max-channel-duration=1
-      --max-pending-tx=4
-      --num-confirmations=4
-      --resubmission-timeout=60s
-      --txmgr.receipt-query-interval=15s
+    environment:
+      OP_BATCHER_L1_ETH_RPC: $L1_ETH_RPC_HTTP
+      OP_BATCHER_L2_ETH_RPC: $OP_ETH_RPC_WS
+      OP_BATCHER_ROLLUP_RPC: $OP_ROLLUP_RPC
+      OP_BATCHER_PRIVATE_KEY: $OP_BATCHER_KEY
+      OP_BATCHER_MAX_CHANNEL_DURATION: 1
+      OP_BATCHER_MAX_PENDING_TX: 4
+      OP_BATCHER_NUM_CONFIRMATIONS: 4
+      OP_BATCHER_RESUBMISSION_TIMEOUT: 60s
+      OP_BATCHER_TXMGR_RECEIPT_QUERY_INTERVAL: 15s
     links:
       - op-geth
       - op-node
@@ -105,15 +104,15 @@ services:
     <<: *resident
     image: ghcr.io/oasysgames/oasys-opstack/op-proposer:v1.1.0
     entrypoint: op-proposer
-    command: >
-      --l1-eth-rpc=$L1_ETH_RPC_HTTP
-      --rollup-rpc=$OP_ROLLUP_RPC
-      --l2oo-address=$OP_L2OO_ADDR
-      --private-key=$OP_PROPOSER_KEY
-      --allow-non-finalized=true
-      --num-confirmations=2
-      --resubmission-timeout=60s
-      --txmgr.receipt-query-interval=5s
+    environment:
+      OP_PROPOSER_L1_ETH_RPC: $L1_ETH_RPC_HTTP
+      OP_PROPOSER_ROLLUP_RPC: $OP_ROLLUP_RPC
+      OP_PROPOSER_L2OO_ADDRESS: $OP_L2OO_ADDR
+      OP_PROPOSER_PRIVATE_KEY: $OP_PROPOSER_KEY
+      OP_PROPOSER_ALLOW_NON_FINALIZED: 'true'
+      OP_PROPOSER_NUM_CONFIRMATIONS: 2
+      OP_PROPOSER_RESUBMISSION_TIMEOUT: 60s
+      OP_PROPOSER_TXMGR_RECEIPT_QUERY_INTERVAL: 5s
     links:
       - op-node
 
