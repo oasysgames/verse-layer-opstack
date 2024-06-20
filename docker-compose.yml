@@ -111,9 +111,9 @@ services:
       --l2oo-address=$OP_L2OO_ADDR
       --private-key=$OP_PROPOSER_KEY
       --allow-non-finalized=true
-      --num-confirmations=4
+      --num-confirmations=2
       --resubmission-timeout=60s
-      --txmgr.receipt-query-interval=15s
+      --txmgr.receipt-query-interval=5s
     links:
       - op-node
 
