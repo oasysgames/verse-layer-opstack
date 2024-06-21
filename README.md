@@ -89,10 +89,19 @@ This script updates the starting block information in the L1 contract. To manual
 node updateStartingBlock.js --starting-blocknumber 123
 ```
 
+#### Create data directories
+Create data directories for each service.
+```shell
+mkdir -p ./data/{op-geth,op-node,message-relayer/{state,store},verse-verifier}
+
+# Allow the service execution user (nobody) to write.
+chown 65534:65534 ./data/{op-geth,op-node,message-relayer,message-relayer/{state,store},verse-verifier}
+```
+
 #### Generate Chain Configurations
 Verify successful generation of configuration files. The produced files (`genesis.json` and `rollup.json`) will be placed in the assets directory:
 ```shell
-docker-compose run --rm --no-deps op-node genesis l2 \
+docker-compose run --rm --no-deps --user=root op-node genesis l2 \
   --l1-rpc "$(grep L1_ETH_RPC_HTTP .env | cut -d= -f2)" \
   --deploy-config  /assets/deploy-config.json \
   --l1-deployments /assets/addresses.json \
@@ -116,12 +125,19 @@ First, clear all outputs from the previous section.
 ```shell
 rm -r ./data
 ```
+
+#### Create data directories
+Repeat the commands from the previous section.
+
 #### Update the Starting Block
 Repeat the commands from the previous section.
+
 #### Generate Chain Configurations
 Repeat the commands from the previous section.
+
 #### Generate the Genesis Block
 Repeat the commands from the previous section.
+
 #### Run Services
 Finally, launch your Verse by starting up the middleware components.
 ```shell
