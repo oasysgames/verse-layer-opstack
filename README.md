@@ -266,3 +266,53 @@ Ensure that no transactions have ever been sent to this address, as required. As
 ```
 
 Once all changes are made, please restart your system by following the steps in the [Launch Your Verse](#3-launch-your-verse) section.
+
+### go-ethereum client causes `transaction type not supported` error
+When using the official [go-ethereum](https://github.com/ethereum/go-ethereum) client to fetch a L2 block data, you may get a `transaction type not supported` error. 
+
+Code example:
+```golang
+package main
+
+import (
+  "context"
+  "fmt"
+
+  "github.com/ethereum/go-ethereum/ethclient"
+)
+
+func main() {
+  client, err := ethclient.Dial("http://127.0.0.1:8545/")
+  if err != nil {
+    panic(err)
+  }
+
+  block, err := client.BlockByNumber(context.Background(), nil)
+  if err != nil {
+    panic(err)  // should "panic: transaction type not supported"
+  }
+
+  fmt.Println(block.Hash())
+}
+```
+
+This is due to the fact that the transaction type of the deposit transaction that op-node is sending to op-geth via the engine API is a custom type (`0x7E`). 
+```shell
+curl http://127.0.0.1:8545/ \
+  -H 'Content-Type: application/json' \
+  -d '{"jsonrpc":"2.0", "method":"eth_getBlockByNumber", "params":["latest", true], "id":1}' \
+ | jq '.result.transactions[0]'
+
+{
+  ...
+  "type": "0x7e",
+  ...
+}
+```
+
+To resolve this, simply add a replace statement from the go-ethereum package to the oasys-op-geth package in the go.mod file. For example:
+```shell
+go mod edit -replace "github.com/ethereum/go-ethereum=github.com/oasysgames/oasys-op-geth@v1.1.1"
+```
+
+If you are using a programming language other than Golang, please make the appropriate fixes for each language.
