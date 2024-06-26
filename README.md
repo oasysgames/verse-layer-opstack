@@ -216,6 +216,14 @@ Our gasless setting Verse correctly returns zero in response to the `eth_gasPric
 To avoid this automatic setting, developers are required to explicitly set both `maxFeePerGas` and `maxPriorityFeePerGas` to zero.
 
 ---
+### How to change block gaslimit?
+The default gas limit is `30,000,000`.
+
+When using the `--miner.gaslimit` option with op-geth, you might notice that the gas limit remains unchanged. This is because op-geth refers to the gas limit setting recorded in the `SystemConfig` contract. Therefore, the correct approach is to call the [setGasLimit](https://github.com/oasysgames/oasys-opstack/blob/2d237fe8656a70e90061c487018ce97720a6ddeb/packages/contracts-bedrock/src/L1/SystemConfig.sol#L202-L204) function. Only the owner is allowed to make this call, so please ensure you call from the `FinalSystemOwner` address. After you have made the change, restart op-geth.
+
+The necessary address can be found on the [check-verse page](https://tools-fe.oasys.games/check-verse) of tools-fe.
+
+---
 ### How to Configure Services to Print Debug-Level Logs for Issue Identification
 Below is a table showing how to configure each service to output debug-level logs to help identify issues:
 
