@@ -119,7 +119,7 @@ services:
 
   op-message-relayer:
     <<: *resident
-    image: ghcr.io/oasysgames/opstack-message-relayer:v1.0.2
+    image: ghcr.io/oasysgames/opstack-message-relayer:v1.0.3
     command: ['./node_modules/.bin/tsx', './src/service.ts']
     stop_grace_period: 2m30s # wait for all the multi-call transactions to be processed
     environment:
@@ -145,7 +145,7 @@ services:
 
   verse-verifier:
     <<: *resident
-    image: ghcr.io/oasysgames/verse-verifier:v1.0.0
+    image: ghcr.io/oasysgames/verse-verifier:v1.1.0
     entrypoint: >
       oasvlfy
         --config.cli
