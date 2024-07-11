@@ -224,6 +224,22 @@ When using the `--miner.gaslimit` option with op-geth, you might notice that the
 The necessary address can be found on the [check-verse page](https://tools-fe.oasys.games/check-verse) of tools-fe.
 
 ---
+### How to Support High Transaction Volume?
+To support a higher transaction volume, you can increase the gas limit, allowing more transactions to be included in one block. As the default configurations of each service are set with a gas limit of 30M in mind, we highly recommend changing the configuration for stable operation.
+
+- op-batcher
+  - Shorten the polling interval of the L2 block: The op-batcher polls L2 blocks using this interval. The default value is 6 seconds. You can set it via the option (`--poll-interval`) or environment variable (`POLL_INTERVAL`). For example, to set it to 1 second: POLL_INTERVAL=1s.
+  - Increase max pending transactions: The op-batcher submits L2 transactions to L1 concurrently up to this value. The default value is 1. You can set it via the option (`--max-pending-tx`) or environment variable (`MAX_PENDING_TX`). For example, to set it to 4: MAX_PENDING_TX=4.
+- op-proposer
+  - None. The op-proposer is not affected by high transaction volume, as it only proposes the L2 state root at the submission interval. One factor that might delay proposing is if the safe L2 head is lagging behind the latest L2 head, but this is not the responsibility of the proposer.
+- message-realyer
+  - Increase max pending transactions: The message-relayer submits L2 transactions to L1 concurrently up to this value. The default value is 1. You can set it via the option (`--maxpendingtxs`) or environment variable (`MESSAGE_RELAYER__MAX_PENDING_TXS`). For example, to set it to 4: MESSAGE_RELAYER__MAX_PENDING_TXS=4.
+- op-node
+  - Disable p2p sync: This is just an idea. P2P sync is the functionality that publishes newly created payloads to replica nodes. As this is a high-load task, disabling it allows the op-node to focus on new block creation and derivation tasks, potentially improving performance and stability. However, the issue lies with the replicas. With P2P sync disabled, only "Synchronize from Hub-Layer" is allowed, which is not real-time. To achieve real-time sync, one option is storage replication, such as replicating op-geth storage. Note that we have not confirmed whether op-geth works with replicated storage. You can disable P2P sync via the environment variable (`OP_NODE_P2P_DISABLE`). For example, to disable it: OP_NODE_P2P_DISABLE=true
+- op-geth
+  - TBD. Please refer to external resources, as geth is widely used across many projects, and extensive knowledge is available on the internet.
+
+---
 ### How to Configure Services to Print Debug-Level Logs for Issue Identification
 Below is a table showing how to configure each service to output debug-level logs to help identify issues:
 
@@ -276,7 +292,7 @@ Ensure that no transactions have ever been sent to this address, as required. As
 Once all changes are made, please restart your system by following the steps in the [Launch Your Verse](#3-launch-your-verse) section.
 
 ### go-ethereum client causes `transaction type not supported` error
-When using the official [go-ethereum](https://github.com/ethereum/go-ethereum) client to fetch a L2 block data, you may get a `transaction type not supported` error. 
+When using the official [go-ethereum](https://github.com/ethereum/go-ethereum) client to fetch a L2 block data, you may get a `transaction type not supported` error.
 
 Code example:
 ```golang
@@ -304,7 +320,7 @@ func main() {
 }
 ```
 
-This is due to the fact that the transaction type of the deposit transaction that op-node is sending to op-geth via the engine API is a custom type (`0x7E`). 
+This is due to the fact that the transaction type of the deposit transaction that op-node is sending to op-geth via the engine API is a custom type (`0x7E`).
 ```shell
 curl http://127.0.0.1:8545/ \
   -H 'Content-Type: application/json' \
