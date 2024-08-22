@@ -159,8 +159,6 @@ services:
         --config.verse.chain_id=$OP_CHAIN_ID
         --config.verse.rpc=$OP_ETH_RPC_WS
         --config.verse.l2oo=$OP_L2OO_ADDR
-        --config.verifier
-        --config.verifier.interval=6s
         --config.submitter
         --config.submitter.targets=$OP_CHAIN_ID
         --config.submitter.wallet.address=$VERIFY_SUBMITTER_ADDR
