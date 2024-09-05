@@ -204,6 +204,12 @@ While you can mitigate this risk by specifying the L1 confirmation block numbers
 If an L1 reorg occurs, it is highly likely to be an L1 incident. We believe that restarting is the best option for dealing with L1 reorgs.
 
 ---
+### L2 Reorged! What Happens When the op-batcher Stops for More Than 6 Hours?
+There is a concept called the sequencing window, which defines the time frame within which the op-batcher is required to submit L2 batches to L1. This is critical for L2 security, ensuring that the L2 safe head doesn't fall too far behind the latest L2 head. The default sequencing window is 3600 blocks, and with the current L1 block time of 6 seconds, this equates to a 6-hour limit (3600 blocks x 6s / 60 / 60).
+
+To mitigate the risk of a reorg, if you notice that the op-batcher has been down for more than an hour, we recommend force-stopping the op-node and op-geth. We believe a complete service shutdown is preferable to an unexpected L2 reorg.
+
+---
 ### Why does the transaction sender need to wait more than the block time even when the network is less crowded?
 The average actual expected waiting time is not 0.5 * blocktime but rather `1.5 * blocktime`. This additional one block time of waiting is caused by the side effects of architectural changes. Following the Ethereum architecture, OP Stack has separated the consensus layer from the execution layer. The execution node (op-geth) produces blocks as dictated by the consensus node (op-node).
 
