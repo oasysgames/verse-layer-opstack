@@ -7,6 +7,19 @@ This repository offers Docker configurations for effortlessly running the Opstac
 
 Please follow the steps below to get your Verse up and running. If you encounter any issues while building, please refer to the [QA](#frequently-asked-questions) section.
 
+## About Versions
+This repository is frequently updated, so it is recommended to pin to a specific version.
+```shell
+git checkout <version tag>
+```
+
+Each version tag corresponds to an [OPStack upgrades](https://docs.optimism.io/operators/node-operators/network-upgrades). (Minor changes are released as patch versions).
+| Version Tag | Upgrade Name |
+| --- | --- |
+| v1.0.0 ~ | Bedrock (Includes [Regolith](https://specs.optimism.io/protocol/regolith/overview.html)) |
+| v1.1.0 ~ | [Canyon](https://specs.optimism.io/protocol/canyon/overview.html) |
+| v1.2.0 ~ | [Granite](https://specs.optimism.io/protocol/granite/overview.html) (Includes [Delta](https://specs.optimism.io/protocol/delta/overview.html), [Ecotone](https://specs.optimism.io/protocol/ecotone/overview.html), [Fjord](https://specs.optimism.io/protocol/fjord/overview.html)) |
+
 ## Steps to Launch Verse
 Before beginning, ensure that the L1 contract sets have already been deployed, and you possess the necessary configuration files (`addresses.json`, `deploy-config.json`). If not, please refer to the contract sets deployment section in our [technical documentation](https://docs.oasys.games/docs/category/build-verse).
 
