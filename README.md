@@ -8,7 +8,7 @@ This repository offers Docker configurations for effortlessly running the Opstac
 Please follow the steps below to get your Verse up and running. If you encounter any issues while building, please refer to the [QA](#frequently-asked-questions) section.
 
 ## Steps to Launch Verse
-Before beginning, ensure that the L1 contract sets have already been deployed, and you possess the necessary configuration files (`addresses.json`, `deploy-config.json`). If not, please refer to the contract sets deployment section in our [technical documentation](https://docs.oasys.games/docs/verse-developer/how-to-build-verse/manual).
+Before beginning, ensure that the L1 contract sets have already been deployed, and you possess the necessary configuration files (`addresses.json`, `deploy-config.json`). If not, please refer to the contract sets deployment section in our [technical documentation](https://docs.oasys.games/docs/category/build-verse).
 
 ### 1. Prepare Assets and Environment
 #### Place Configuration Files
@@ -33,7 +33,12 @@ cp .env.sample.mainnet .env
 
 # Sample for testnet
 cp .env.sample.testnet .env
+
+# Sample for private
+cp .env.sample.private .env
 ```
+
+> *Related project for building a private L2: [oasys-private-l1](https://github.com/oasysgames/oasys-private-l1)*
 
 To configure the environment file with addresses sourced from `addresses.json`, use the following commands to extract the required addresses:
 ```shell
@@ -101,18 +106,47 @@ chown 65534:65534 ./data/{op-geth,op-node,message-relayer,message-relayer/{state
 #### Generate Chain Configurations
 Verify successful generation of configuration files. The produced files (`genesis.json` and `rollup.json`) will be placed in the assets directory:
 ```shell
-docker-compose run --rm --no-deps --user=root op-node genesis l2 \
-  --l1-rpc "$(grep L1_ETH_RPC_HTTP .env | cut -d= -f2)" \
-  --deploy-config  /assets/deploy-config.json \
-  --l1-deployments /assets/addresses.json \
-  --outfile.l2     /assets/genesis.json \
-  --outfile.rollup /assets/rollup.json
+docker run --rm -ti -u 65534:65534 -v $PWD/assets:/assets \
+  ghcr.io/oasysgames/oasys-opstack/op-node:v1.0.0 op-node genesis l2 \
+    --l1-rpc "$(grep L1_ETH_RPC_HTTP .env | cut -d= -f2)" \
+    --deploy-config  /assets/deploy-config.json \
+    --l1-deployments /assets/addresses.json \
+    --outfile.l2     /assets/genesis.json \
+    --outfile.rollup /assets/rollup.json
 ```
+
+#### Add upgrade times to rollup.json
+Add timestamps for L2 upgrade activation blocks to the `assets/rollup.json` created in the previous step.
+
+```json
+  "regolith_time": 0,
+  "canyon_time": <set this value>,
+  "delta_time": <set this value>,
+  "ecotone_time": <set this value>,
+  "fjord_time": <set this value>,
+  "granite_time": <set this value>,
+  "batch_inbox_address": "0x...",
+```
+
+Field descriptions:
+| name | sample |
+| --- | --- |
+| canyon_time | Specify `0` |
+| delta_time | Specify `0` |
+| ecotone_time | Specify `current_time + 600s` (Example command: `expr $(date +%s) + 600`) |
+| fjord_time | Specify the same value as `ecotone_time` |
+| granite_time | Specify the same value as `ecotone_time` |
+
+> [!IMPORTANT]
+> - The above only applies when building a new Verse
+> - You must start the chain before the time specified in `ecotone_time`
+> - Do not modify these values after the upgrades have been applied, as this may cause unnecessary issues
 
 #### Generate the Genesis Block
 Ensure the successful generation of the genesis block (number=0):
 ```shell
-docker-compose run --rm --no-deps op-geth init /assets/genesis.json
+docker run --rm -ti -u 65534:65534 -v $PWD/assets:/assets -v $PWD/data/op-geth:/data \
+  ghcr.io/oasysgames/oasys-op-geth:v1.0.0 --datadir /data init /assets/genesis.json
 ```
 
 

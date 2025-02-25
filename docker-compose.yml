@@ -1,5 +1,3 @@
-version: '3'
-
 x-resident: &resident
   restart: unless-stopped
   user: nobody
@@ -12,8 +10,8 @@ x-resident: &resident
 services:
   op-geth:
     <<: *resident
-    image: ghcr.io/oasysgames/oasys-op-geth:v1.2.0
-    entrypoint: geth
+    image: ghcr.io/oasysgames/oasys-op-geth:v1.3.0-18a5e9f31
+    entrypoint: /bin/sh /assets/op-geth/entrypoint.sh
     environment:
       GETH_DATADIR: /data
       GETH_HTTP: 'true'
@@ -21,12 +19,12 @@ services:
       GETH_HTTP_VHOSTS: '*'
       GETH_HTTP_ADDR: 0.0.0.0
       GETH_HTTP_PORT: 8545
-      GETH_HTTP_API: net,eth,web3
+      GETH_HTTP_API: net,eth,web3,miner
       GETH_WS: 'true'
       GETH_WS_ORIGINS: '*'
       GETH_WS_ADDR: 0.0.0.0
       GETH_WS_PORT: 8546
-      GETH_WS_API: net,eth,web3
+      GETH_WS_API: net,eth,web3,miner
       GETH_SYNCMODE: full
       GETH_GCMODE: archive
       GETH_CACHE: 4096
@@ -39,7 +37,6 @@ services:
       GETH_AUTHRPC_JWTSECRET: /assets/jwt.txt
       GETH_TXPOOL_PRICELIMIT: 0
       GETH_ROLLUP_SUPERCHAIN_UPGRADES: 'false'
-      GETH_OVERRIDE_CANYON: null  # null = no fork
     volumes:
       - ./assets:/assets
       - ./data/op-geth:/data
@@ -49,10 +46,11 @@ services:
 
   op-node:
     <<: *resident
-    image: ghcr.io/oasysgames/oasys-opstack/op-node:v1.1.0
+    image: ghcr.io/oasysgames/oasys-opstack/op-node:v1.2.0-a0f55fa2d
     entrypoint: op-node
     environment:
       OP_NODE_L1_ETH_RPC: $L1_ETH_RPC_HTTP
+      OP_NODE_L1_BEACON: $L1_BEACON_API
       OP_NODE_L1_RPC_KIND: basic
       OP_NODE_L1_EPOCH_POLL_INTERVAL: 192s
       OP_NODE_L1_HTTP_POLL_INTERVAL: 6s
@@ -85,7 +83,7 @@ services:
 
   op-batcher:
     <<: *resident
-    image: ghcr.io/oasysgames/oasys-opstack/op-batcher:v1.1.0
+    image: ghcr.io/oasysgames/oasys-opstack/op-batcher:v1.2.0-a0f55fa2d
     entrypoint: op-batcher
     environment:
       OP_BATCHER_L1_ETH_RPC: $L1_ETH_RPC_HTTP
@@ -103,7 +101,7 @@ services:
 
   op-proposer:
     <<: *resident
-    image: ghcr.io/oasysgames/oasys-opstack/op-proposer:v1.1.0
+    image: ghcr.io/oasysgames/oasys-opstack/op-proposer:v1.2.0-a0f55fa2d
     entrypoint: op-proposer
     environment:
       OP_PROPOSER_L1_ETH_RPC: $L1_ETH_RPC_HTTP
