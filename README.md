@@ -8,13 +8,13 @@ This repository offers Docker configurations for effortlessly running the Opstac
 Please follow the steps below to get your Verse up and running. If you encounter any issues while building, please refer to the [QA](#frequently-asked-questions) section.
 
 ## About Versions
-This repository is frequently updated, so it is recommended to pin to a specific version.
+This repository follows semantic versioning with the major version fixed at `v1`(representing Verse V1). Minor version updates correspond to OPStack protocol upgrades(hardforks). Patch version updates are releases focused on bug fixes and parameter changes. It is strongly recommended to pin to a specific version after git cloning, as tracking the main branch would result in automatic application of upgrades.
 ```shell
 git checkout <version tag>
 ```
 
-Each version tag corresponds to an [OPStack upgrades](https://docs.optimism.io/operators/node-operators/network-upgrades). (Minor changes are released as patch versions).
-| Version Tag | Upgrade Name |
+Version tags to OPStack upgrades mapping:
+| Tag | Upgrade |
 | --- | --- |
 | v1.0.0 ~ | Bedrock (Includes [Regolith](https://specs.optimism.io/protocol/regolith/overview.html)) |
 | v1.1.0 ~ | [Canyon](https://specs.optimism.io/protocol/canyon/overview.html) |
