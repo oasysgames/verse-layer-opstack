@@ -8,7 +8,7 @@ This repository offers Docker configurations for effortlessly running the Opstac
 Please follow the steps below to get your Verse up and running. If you encounter any issues while building, please refer to the [QA](#frequently-asked-questions) section.
 
 ## About Versions
-This repository follows semantic versioning with the major version fixed at `v1`(representing Verse V1). Minor version updates correspond to OPStack protocol upgrades(hardforks). Patch version updates are releases focused on bug fixes and parameter changes. It is strongly recommended to pin to a specific version after git cloning, as tracking the main branch would result in automatic application of upgrades.
+This repository follows semantic versioning with the major version fixed at `v1`(meaning Verse V1). Minor version updates correspond to OPStack protocol upgrades(hardforks). Patch version updates are releases focused on bug fixes and parameter changes. It is strongly recommended to pin to a specific version after git cloning, as tracking the main branch would result in automatic application of upgrades.
 ```shell
 git checkout <version tag>
 ```
@@ -128,32 +128,25 @@ docker run --rm -ti -u 65534:65534 -v $PWD/assets:/assets \
     --outfile.rollup /assets/rollup.json
 ```
 
-#### Add upgrade times to rollup.json
-Add timestamps for L2 upgrade activation blocks to the `assets/rollup.json` created in the previous step.
-
-```json
-  "regolith_time": 0,
-  "canyon_time": <set this value>,
-  "delta_time": <set this value>,
-  "ecotone_time": <set this value>,
-  "fjord_time": <set this value>,
-  "granite_time": <set this value>,
-  "batch_inbox_address": "0x...",
+#### Add upgrade timestamps to .env
+Add block timestamps for L2 upgrades to the `.env` file.
+```dotenv
+# Block timestamps for upgrades (empty = no upgrade)
+OP_OVERRIDE_CANYON=
+OP_OVERRIDE_DELTA=
+OP_OVERRIDE_ECOTONE=
+OP_OVERRIDE_FJORD=
+OP_OVERRIDE_GRANITE=
 ```
 
-Field descriptions:
-| name | sample |
-| --- | --- |
-| canyon_time | Specify `0` |
-| delta_time | Specify `0` |
-| ecotone_time | Specify `current_time + 600s` (Example command: `expr $(date +%s) + 600`) |
-| fjord_time | Specify the same value as `ecotone_time` |
-| granite_time | Specify the same value as `ecotone_time` |
+The `op-node` and `op-geth` must be started before the specified timestamps, so it's necessary to set this time slightly in the future. For a newly built Verse, it's acceptable to set all values to the same time.
+```shell
+# Getting a timestamp 10 minutes in the future
+expr $(date +%s) + 600
+```
 
 > [!IMPORTANT]
-> - The above only applies when building a new Verse
-> - You must start the chain before the time specified in `ecotone_time`
-> - Do not modify these values after the upgrades have been applied, as this may cause unnecessary issues
+> **Do not modify timestamps after upgrades have been applied. In particular, never re-change to a future.**
 
 #### Generate the Genesis Block
 Ensure the successful generation of the genesis block (number=0):
