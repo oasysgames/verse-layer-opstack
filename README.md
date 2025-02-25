@@ -129,7 +129,7 @@ docker run --rm -ti -u 65534:65534 -v $PWD/assets:/assets \
 ```
 
 #### Add upgrade timestamps to .env
-Add block timestamps for L2 upgrades to the `.env` file.
+Add the block timestamps for L2 upgrades to the `.env` file. These timestamps must be set slightly in the future as `op-node` and `op-geth` must be launched before the specified times. All timestamps can be set to the same value, but due to specification constraints, `0` cannot be used.
 ```dotenv
 # Block timestamps for upgrades (empty = no upgrade)
 OP_OVERRIDE_CANYON=
@@ -139,11 +139,7 @@ OP_OVERRIDE_FJORD=
 OP_OVERRIDE_GRANITE=
 ```
 
-The `op-node` and `op-geth` must be started before the specified timestamps, so it's necessary to set this time slightly in the future. For a newly built Verse, it's acceptable to set all values to the same time.
-```shell
-# Getting a timestamp 10 minutes in the future
-expr $(date +%s) + 600
-```
+*Example command to get timestamp 10 minutes ahead*: `expr $(date +%s) + 600`
 
 > [!IMPORTANT]
 > **Do not modify timestamps after upgrades have been applied. In particular, never re-change to a future.**
