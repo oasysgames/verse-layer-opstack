@@ -7,8 +7,21 @@ This repository offers Docker configurations for effortlessly running the Opstac
 
 Please follow the steps below to get your Verse up and running. If you encounter any issues while building, please refer to the [QA](#frequently-asked-questions) section.
 
+## About Versions
+This repository follows semantic versioning with the major version fixed at `v1`(meaning Verse V1). Minor version updates correspond to OPStack protocol upgrades(hardforks). Patch version updates are releases focused on bug fixes and parameter changes. It is strongly recommended to pin to a specific version after git cloning, as tracking the main branch would result in automatic application of upgrades.
+```shell
+git checkout <version tag>
+```
+
+Version tags to OPStack upgrades mapping:
+| Tag | Upgrade |
+| --- | --- |
+| v1.0.0 ~ | Bedrock (Includes [Regolith](https://specs.optimism.io/protocol/regolith/overview.html)) |
+| v1.1.0 ~ | [Canyon](https://specs.optimism.io/protocol/canyon/overview.html) |
+| v1.2.0 ~ | [Granite](https://specs.optimism.io/protocol/granite/overview.html) (Includes [Delta](https://specs.optimism.io/protocol/delta/overview.html), [Ecotone](https://specs.optimism.io/protocol/ecotone/overview.html), [Fjord](https://specs.optimism.io/protocol/fjord/overview.html)) |
+
 ## Steps to Launch Verse
-Before beginning, ensure that the L1 contract sets have already been deployed, and you possess the necessary configuration files (`addresses.json`, `deploy-config.json`). If not, please refer to the contract sets deployment section in our [technical documentation](https://docs.oasys.games/docs/verse-developer/how-to-build-verse/manual).
+Before beginning, ensure that the L1 contract sets have already been deployed, and you possess the necessary configuration files (`addresses.json`, `deploy-config.json`). If not, please refer to the contract sets deployment section in our [technical documentation](https://docs.oasys.games/docs/category/build-verse).
 
 ### 1. Prepare Assets and Environment
 #### Place Configuration Files
@@ -33,7 +46,12 @@ cp .env.sample.mainnet .env
 
 # Sample for testnet
 cp .env.sample.testnet .env
+
+# Sample for private
+cp .env.sample.private .env
 ```
+
+> *Related project for building a private L2: [oasys-private-l1](https://github.com/oasysgames/oasys-private-l1)*
 
 To configure the environment file with addresses sourced from `addresses.json`, use the following commands to extract the required addresses:
 ```shell
@@ -101,18 +119,36 @@ chown 65534:65534 ./data/{op-geth,op-node,message-relayer,message-relayer/{state
 #### Generate Chain Configurations
 Verify successful generation of configuration files. The produced files (`genesis.json` and `rollup.json`) will be placed in the assets directory:
 ```shell
-docker-compose run --rm --no-deps --user=root op-node genesis l2 \
-  --l1-rpc "$(grep L1_ETH_RPC_HTTP .env | cut -d= -f2)" \
-  --deploy-config  /assets/deploy-config.json \
-  --l1-deployments /assets/addresses.json \
-  --outfile.l2     /assets/genesis.json \
-  --outfile.rollup /assets/rollup.json
+docker run --rm -ti -u 65534:65534 -v $PWD/assets:/assets \
+  ghcr.io/oasysgames/oasys-opstack/op-node:v1.0.0 op-node genesis l2 \
+    --l1-rpc "$(grep L1_ETH_RPC_HTTP .env | cut -d= -f2)" \
+    --deploy-config  /assets/deploy-config.json \
+    --l1-deployments /assets/addresses.json \
+    --outfile.l2     /assets/genesis.json \
+    --outfile.rollup /assets/rollup.json
 ```
+
+#### Add upgrade timestamps to .env
+Add the block timestamps for L2 upgrades to the `.env` file. These timestamps must be set slightly in the future as `op-node` and `op-geth` must be launched before the specified times. All timestamps can be set to the same value, but due to specification constraints, `0` cannot be used.
+```dotenv
+# Block timestamps for upgrades (empty = no upgrade)
+OP_OVERRIDE_CANYON=
+OP_OVERRIDE_DELTA=
+OP_OVERRIDE_ECOTONE=
+OP_OVERRIDE_FJORD=
+OP_OVERRIDE_GRANITE=
+```
+
+*Example command to get timestamp 10 minutes ahead*: `expr $(date +%s) + 600`
+
+> [!IMPORTANT]
+> **Do not modify timestamps after upgrades have been applied. In particular, never re-change to a future.**
 
 #### Generate the Genesis Block
 Ensure the successful generation of the genesis block (number=0):
 ```shell
-docker-compose run --rm --no-deps op-geth init /assets/genesis.json
+docker run --rm -ti -u 65534:65534 -v $PWD/assets:/assets -v $PWD/data/op-geth:/data \
+  ghcr.io/oasysgames/oasys-op-geth:v1.0.0 --datadir /data init /assets/genesis.json
 ```
 
 
