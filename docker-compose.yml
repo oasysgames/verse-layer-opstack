@@ -67,7 +67,6 @@ services:
       OP_NODE_RPC_ENABLE_ADMIN: 'true'
       OP_NODE_RPC_ADDR: 0.0.0.0
       OP_NODE_RPC_PORT: 8547
-      OP_NODE_RPC_ADMIN_STATE: /data/admin-state
       OP_NODE_SNAPSHOT_LOG: /data/snapshotlog
       OP_NODE_P2P_SEQUENCER_KEY: $P2P_SEQUENCER_KEY
       OP_NODE_P2P_PRIV_PATH: /data/p2p_priv.txt
