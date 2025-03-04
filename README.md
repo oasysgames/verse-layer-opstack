@@ -314,6 +314,7 @@ function deleteL2Outputs(uint256 _l2OutputIndex) external virtual;
 ```
 Finally, confirm that all outputs have been deleted by calling nextOutputIndex again.
 
+---
 #### Change the Inbox Address
 Manually update the inbox address in addresses.json and deploy-config.json.
 
@@ -333,6 +334,7 @@ Ensure that no transactions have ever been sent to this address, as required. As
 
 Once all changes are made, please restart your system by following the steps in the [Launch Your Verse](#3-launch-your-verse) section.
 
+---
 ### go-ethereum client causes `transaction type not supported` error
 When using the official [go-ethereum](https://github.com/ethereum/go-ethereum) client to fetch a L2 block data, you may get a `transaction type not supported` error.
 
@@ -382,3 +384,24 @@ go mod edit -replace "github.com/ethereum/go-ethereum=github.com/oasysgames/oasy
 ```
 
 If you are using a programming language other than Golang, please make the appropriate fixes for each language.
+
+---
+### What `channel_timeout` Means?
+channel_timeout defines the expiration time of a valid channel. L2 transactions are batched together to improve compression and reduce L1 gas costs when submitting data. These batches are referred to as a channel. Since a channel can become too large to fit within an L1 transaction, it is split into smaller chunks called frames.
+
+A channel is considered timed out if:
+```
+current_l1_block.number > channel.open_l1_block.number + CHANNEL_TIMEOUT
+```
+Where:
+- current_l1_block is the latest known L1 block.
+- channel.open_l1_block is the L1 block number where the channel was first opened.
+
+References:
+- [L2 Chain Derivation Specification: Timeouts](https://specs.optimism.io/protocol/derivation.html#timeouts)
+- [L2 Chain Derivation Specification: Batch Submission Wire Format](https://specs.optimism.io/protocol/derivation.html#batch-submission-wire-format)
+
+
+
+
+
