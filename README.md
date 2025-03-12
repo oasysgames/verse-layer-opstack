@@ -13,6 +13,9 @@ This repository follows semantic versioning with the major version fixed at `v1`
 git checkout <version tag>
 ```
 
+For those building Verse for the first time, we recommend always choosing the latest version.
+For those who have already built Verse, we also recommend upgrading to the latest version.
+
 Version tags to OPStack upgrades mapping:
 | Tag | Upgrade |
 | --- | --- |
@@ -93,7 +96,7 @@ yarn install
 #### Pull Docker Containers
 Pull all the required Docker images for Verse middleware.
 ```shell
-docker-compose pull op-geth op-node op-batcher op-proposer op-message-relayer verse-verifier
+docker compose pull op-geth op-node op-batcher op-proposer op-message-relayer verse-verifier
 ```
 
 ### 2. Verifying Correct Startup of Verse
@@ -177,7 +180,7 @@ Repeat the commands from the previous section.
 #### Run Services
 Finally, launch your Verse by starting up the middleware components.
 ```shell
-docker-compose up -d op-geth op-node op-batcher op-proposer op-message-relayer
+docker compose up -d op-geth op-node op-batcher op-proposer op-message-relayer
 ```
 
 ### 4. Activate Verse Verifier
@@ -195,7 +198,7 @@ To activate the Verse Verifier, please fill out the application form bellow.
 
 Once the Oasys side settings are configured, you can start the Verse Verifier by running:
 ```sh
-docker-compose up -d verse-verifier
+docker compose up -d verse-verifier
 ```
 
 ## Setup a Replica Node
