@@ -125,7 +125,7 @@ services:
 
   op-message-relayer:
     <<: *resident
-    image: ghcr.io/oasysgames/opstack-message-relayer:v1.0.3
+    image: ghcr.io/oasysgames/opstack-message-relayer:v1.0.4
     command: ['./node_modules/.bin/tsx', './src/service.ts']
     stop_grace_period: 2m30s # wait for all the multi-call transactions to be processed
     environment:
@@ -144,9 +144,11 @@ services:
       MESSAGE_RELAYER__FINALIZER_PRIVATE_KEY: $MR_FINALIZER_KEY
       MESSAGE_RELAYER__STATE_FILE_PATH: /app/state/state.json
       MESSAGE_RELAYER__QUEUE_PATH: /app/store
+      MESSAGE_RELAYER__QUEUE_PATH_PROVER: /app/store-prover
     volumes:
       - ./data/message-relayer/state:/app/state
       - ./data/message-relayer/store:/app/store
+      - ./data/message-relayer/store:/app/store-prover
     ports:
       - $RELAYER_HTTP_PORT:7300/tcp
 
