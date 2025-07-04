@@ -58,6 +58,7 @@ services:
       OP_NODE_L1_RPC_KIND: basic
       OP_NODE_L1_EPOCH_POLL_INTERVAL: 192s
       OP_NODE_L1_HTTP_POLL_INTERVAL: 6s
+      OP_NODE_L1_TRUST_RPC: 'true'
       OP_NODE_L2_ENGINE_RPC: $OP_ENGINE_RPC
       OP_NODE_L2_ENGINE_AUTH: /assets/jwt.txt
       OP_NODE_ROLLUP_CONFIG: /assets/rollup.json
