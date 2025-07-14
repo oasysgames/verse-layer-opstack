@@ -404,7 +404,33 @@ References:
 - [L2 Chain Derivation Specification: Timeouts](https://specs.optimism.io/protocol/derivation.html#timeouts)
 - [L2 Chain Derivation Specification: Batch Submission Wire Format](https://specs.optimism.io/protocol/derivation.html#batch-submission-wire-format)
 
+---
+### L2 Timestamp Delay of 6 Hours — How to Resolve?
+If you observe the following warning immediately after starting your op-node, it indicates that the sequencer has stopped producing canonical L2 blocks:
+```log
+2025-07-11T03:12:55.368548753Z t=2025-07-11T03:12:55+0000 lvl=warn msg="Overriding sequencer.stopped with persisted state" stopped=true
+```
+To resolve this issue, try removing the following environment variable from your configuration:
+```
+OP_NODE_RPC_ADMIN_STATE: /data/admin-state
+```
+After removing this setting, the op-node should resume normal sequencing and begin catching up.
 
+#### Why Is the L2 Timestamp Delayed by 6 Hours?
+If both op-node and op-batcher are stopped for a duration longer than the Sequence Window (3600 L1 blocks = ~6 hours), op-node stops sequencing new blocks.
+In this situation, the op-node enters a fallback mode where it internally generates virtual batches in place of batches that would normally be submitted from L1 by the op-batcher. Based on these synthetic batches, the op-node continues to mine L2 blocks. However, this is not the intended behavior, and leads to inconsistencies, particularly in block timestamps — often resulting in a 6-hour delay.
 
+```sh
+# Normally, L2 batches are derived from confirmed L1 transactions submitted by the op-batcher.
+# But after sequence window expiration, op-node constructs local virtual batches and proceeds to build L2 blocks based on them:
+msg="Generating next batch" epoch=... timestamp=1751932446
+msg="Generated attributes in payload queue" txs=1
 
+# The safe head updates based on outdated or virtual batch data:
+msg="Local safe head updated" ...
+msg="Forkchoice update" ...
 
+# L2 blocks are then produced using these virtual inputs, creating a misleading forward progression:
+msg="Detected new block-building from L1 derivation, avoiding sequencing for now."
+msg="Processed new L2 block" ... timestamp=1751932446
+```
