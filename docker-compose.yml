@@ -50,7 +50,7 @@ services:
 
   op-node:
     <<: *resident
-    image: ghcr.io/oasysgames/oasys-opstack/op-node:v1.2.0
+    image: ghcr.io/oasysgames/oasys-opstack/op-node:v1.2.0-patch2
     entrypoint: op-node
     environment:
       OP_NODE_L1_ETH_RPC: $L1_ETH_RPC_HTTP
@@ -92,7 +92,7 @@ services:
 
   op-batcher:
     <<: *resident
-    image: ghcr.io/oasysgames/oasys-opstack/op-batcher:v1.2.0
+    image: ghcr.io/oasysgames/oasys-opstack/op-batcher:v1.2.0-patch5
     entrypoint: op-batcher
     environment:
       OP_BATCHER_L1_ETH_RPC: $L1_ETH_RPC_HTTP
