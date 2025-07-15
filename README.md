@@ -404,6 +404,7 @@ References:
 - [L2 Chain Derivation Specification: Timeouts](https://specs.optimism.io/protocol/derivation.html#timeouts)
 - [L2 Chain Derivation Specification: Batch Submission Wire Format](https://specs.optimism.io/protocol/derivation.html#batch-submission-wire-format)
 
+---
 ### How to Resolve `L2OutputOracle: block hash does not match` Error in op-proposer
 Error Example:
 ```sh
