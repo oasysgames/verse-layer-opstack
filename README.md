@@ -404,6 +404,21 @@ References:
 - [L2 Chain Derivation Specification: Timeouts](https://specs.optimism.io/protocol/derivation.html#timeouts)
 - [L2 Chain Derivation Specification: Batch Submission Wire Format](https://specs.optimism.io/protocol/derivation.html#batch-submission-wire-format)
 
+### How to Resolve `L2OutputOracle: block hash does not match` Error in op-proposer
+Error Example:
+```sh
+verse-layer-opstack-op-proposer-1  | t=2025-07-07T05:46:12+0000 lvl=warn msg="Failed to create a transaction, will retry" service=proposer err="failed to estimate gas: execution reverted: L2OutputOracle: block hash does not match the hash at the expected height: 0x08c379a0000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000000000000000494c324f75747075744f7261636c653a20626c6f636b206861736820646f6573206e6f74206d6174636820746865206861736820617420746865206578706563746564206865696768740000000000000000000000000000000000000000000000"
+```
+This error typically occurs when the op-proposer has been stopped for an extended period of time.
+The L2OutputOracle contract attempts to retrieve a historical block hash, but Ethereum's L1 node no longer retains it — leading to a mismatch error.
+
+To bypass the block hash check, set the following environment variable in your op-proposer configuration:
+```
+OMIT_L1_BLOCKHASH_IN_PROPOSALS: 'true'
+```
+This should be used only as a temporary workaround.
+Once your op-proposer has fully caught up, please remove this setting to re-enable block hash verification for correctness and security.
+
 ---
 ### L2 Timestamp Delay of 6 Hours — How to Resolve?
 If you observe the following warning immediately after starting your op-node, it indicates that the sequencer has stopped producing canonical L2 blocks:
