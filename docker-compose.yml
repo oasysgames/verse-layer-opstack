@@ -50,7 +50,7 @@ services:
 
   op-node:
     <<: *resident
-    image: ghcr.io/oasysgames/oasys-opstack/op-node:v1.2.0-patch2
+    image: ghcr.io/oasysgames/oasys-opstack/op-node:TODO
     entrypoint: op-node
     environment:
       OP_NODE_L1_ETH_RPC: $L1_ETH_RPC_HTTP
@@ -58,7 +58,6 @@ services:
       OP_NODE_L1_RPC_KIND: basic
       OP_NODE_L1_EPOCH_POLL_INTERVAL: 192s
       OP_NODE_L1_HTTP_POLL_INTERVAL: 6s
-      OP_NODE_L1_TRUST_RPC: 'true'
       OP_NODE_L2_ENGINE_RPC: $OP_ENGINE_RPC
       OP_NODE_L2_ENGINE_AUTH: /assets/jwt.txt
       OP_NODE_ROLLUP_CONFIG: /assets/rollup.json
@@ -92,7 +91,7 @@ services:
 
   op-batcher:
     <<: *resident
-    image: ghcr.io/oasysgames/oasys-opstack/op-batcher:v1.2.0-patch5
+    image: ghcr.io/oasysgames/oasys-opstack/op-batcher:TODO
     entrypoint: op-batcher
     environment:
       OP_BATCHER_L1_ETH_RPC: $L1_ETH_RPC_HTTP
@@ -110,7 +109,7 @@ services:
 
   op-proposer:
     <<: *resident
-    image: ghcr.io/oasysgames/oasys-opstack/op-proposer:v1.2.0
+    image: ghcr.io/oasysgames/oasys-opstack/op-proposer:TODO
     entrypoint: op-proposer
     environment:
       OP_PROPOSER_L1_ETH_RPC: $L1_ETH_RPC_HTTP
