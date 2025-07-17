@@ -50,7 +50,7 @@ services:
 
   op-node:
     <<: *resident
-    image: ghcr.io/oasysgames/oasys-opstack/op-node:TODO
+    image: ghcr.io/oasysgames/oasys-opstack/op-node:v1.3.0
     entrypoint: op-node
     environment:
       OP_NODE_L1_ETH_RPC: $L1_ETH_RPC_HTTP
@@ -91,7 +91,7 @@ services:
 
   op-batcher:
     <<: *resident
-    image: ghcr.io/oasysgames/oasys-opstack/op-batcher:TODO
+    image: ghcr.io/oasysgames/oasys-opstack/op-batcher:v1.3.0
     entrypoint: op-batcher
     environment:
       OP_BATCHER_L1_ETH_RPC: $L1_ETH_RPC_HTTP
@@ -109,7 +109,7 @@ services:
 
   op-proposer:
     <<: *resident
-    image: ghcr.io/oasysgames/oasys-opstack/op-proposer:TODO
+    image: ghcr.io/oasysgames/oasys-opstack/op-proposer:v1.3.0
     entrypoint: op-proposer
     environment:
       OP_PROPOSER_L1_ETH_RPC: $L1_ETH_RPC_HTTP
