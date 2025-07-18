@@ -421,6 +421,14 @@ This should be used only as a temporary workaround.
 Once your op-proposer has fully caught up, please remove this setting to re-enable block hash verification for correctness and security.
 
 ---
+### What is `OP_BATCHER_MAX_CHANNEL_DURATION`?
+OP_BATCHER_MAX_CHANNEL_DURATION defines the number of L1 blocks over which the op-batcher keeps a channel open before closing it and submitting a batch. In other words, the op-batcher aggregates L2 blocks produced during this duration into a single L1 batch.
+
+To optimize gas costs, it is recommended to set this value relatively high — for example, Optimism suggests a value of [1500 (which corresponds to roughly 5 hours)](https://docs.optimism.io/operators/chain-operators/configuration/batcher#set-your--op_batcher_max_channel_duration).
+
+⚠️ Trade-off: A longer duration reduces gas usage, but delay how quickly the L2 safe head catches up to the latest head.
+
+---
 ### L2 Timestamp Delay of 6 Hours — How to Resolve?
 If you observe the following warning immediately after starting your op-node, it indicates that the sequencer has stopped producing canonical L2 blocks:
 ```log
