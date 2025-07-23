@@ -290,8 +290,8 @@ Below is a table showing how to configure each service to output debug-level log
 
 |Service|Service|
 |--|--|
-|op-node|Include the `--log.level=debug` option in the start command line|
-|op-geth|Include the `--verbosity=5` option in the start command line|
+|op-node|Include the `--log.level=debug` option in the start command line, or set `OP_NODE_LOG_LEVEL: 'debug'`|
+|op-geth|Include the `--verbosity=5` option in the start command line, or set `GETH_VERBOSITY: 5`|
 |op-batcher|Same as op-node |
 |op-proposer|Same as op-node|
 |op-message-relayer|Set the `MESSAGE_RELAYER__LOG_LEVEL` environment variable to `debug`|
