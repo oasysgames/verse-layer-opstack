@@ -215,7 +215,7 @@ During this process, you will see the following log in the op-node:
 
 ---
 ### The op-proposer outputs a  `block hash does not match` error repeatedly. How should I address this?
-If the error logs look like the following, you can address this issue by restarting the op-node with the `--omit-l1blockhash-in-proposals` flag:
+If the error logs look like the following, you can address this issue by restarting the op-node with the `--omit-l1blockhash-in-proposals` flag (or by setting env variable `OP_PROPOSER_OMIT_L1_BLOCKHASH_IN_PROPOSALS: 'true'`):
 ```sh
 2024-04-14 10:05:56 t=2024-04-14T03:05:56+0000 lvl=warn msg="Failed to create a transaction, will retry" service=proposer err="failed to estimate gas: execution reverted: L2OutputOracle: block hash does not match the hash at the expected height"
 ```
