@@ -10,7 +10,7 @@ x-resident: &resident
 services:
   op-geth:
     <<: *resident
-    image: ghcr.io/oasysgames/oasys-op-geth:v1.3.0
+    image: ghcr.io/oasysgames/oasys-op-geth:v1.4.2
     entrypoint: geth
     environment:
       GETH_DATADIR: /data
@@ -41,6 +41,8 @@ services:
       GETH_OVERRIDE_ECOTONE: $OP_OVERRIDE_ECOTONE
       GETH_OVERRIDE_FJORD: $OP_OVERRIDE_FJORD
       GETH_OVERRIDE_GRANITE: $OP_OVERRIDE_GRANITE
+      GETH_OVERRIDE_HOLOCENE: $OP_OVERRIDE_HOLOCENE
+      GETH_OVERRIDE_ISTHMUS: $OP_OVERRIDE_ISTHMUS
     volumes:
       - ./assets:/assets
       - ./data/op-geth:/data
@@ -50,7 +52,7 @@ services:
 
   op-node:
     <<: *resident
-    image: ghcr.io/oasysgames/oasys-opstack/op-node:v1.2.0-patch2
+    image: ghcr.io/oasysgames/oasys-opstack/op-node:v1.3.1
     entrypoint: op-node
     environment:
       OP_NODE_L1_ETH_RPC: $L1_ETH_RPC_HTTP
@@ -58,7 +60,6 @@ services:
       OP_NODE_L1_RPC_KIND: basic
       OP_NODE_L1_EPOCH_POLL_INTERVAL: 192s
       OP_NODE_L1_HTTP_POLL_INTERVAL: 6s
-      OP_NODE_L1_TRUST_RPC: 'true'
       OP_NODE_L2_ENGINE_RPC: $OP_ENGINE_RPC
       OP_NODE_L2_ENGINE_AUTH: /assets/jwt.txt
       OP_NODE_ROLLUP_CONFIG: /assets/rollup.json
@@ -81,6 +82,8 @@ services:
       OP_NODE_OVERRIDE_ECOTONE: $OP_OVERRIDE_ECOTONE
       OP_NODE_OVERRIDE_FJORD: $OP_OVERRIDE_FJORD
       OP_NODE_OVERRIDE_GRANITE: $OP_OVERRIDE_GRANITE
+      OP_NODE_OVERRIDE_HOLOCENE: $OP_OVERRIDE_HOLOCENE
+      OP_NODE_OVERRIDE_ISTHMUS: $OP_OVERRIDE_ISTHMUS
     volumes:
       - ./assets:/assets
       - ./data/op-node:/data
@@ -92,7 +95,7 @@ services:
 
   op-batcher:
     <<: *resident
-    image: ghcr.io/oasysgames/oasys-opstack/op-batcher:v1.2.0-patch5
+    image: ghcr.io/oasysgames/oasys-opstack/op-batcher:v1.3.1
     entrypoint: op-batcher
     environment:
       OP_BATCHER_L1_ETH_RPC: $L1_ETH_RPC_HTTP
@@ -110,7 +113,7 @@ services:
 
   op-proposer:
     <<: *resident
-    image: ghcr.io/oasysgames/oasys-opstack/op-proposer:v1.2.0
+    image: ghcr.io/oasysgames/oasys-opstack/op-proposer:v1.3.1
     entrypoint: op-proposer
     environment:
       OP_PROPOSER_L1_ETH_RPC: $L1_ETH_RPC_HTTP
