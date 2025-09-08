@@ -131,6 +131,20 @@ docker run --rm -ti -u 65534:65534 -v $PWD/assets:/assets \
     --outfile.rollup /assets/rollup.json
 ```
 
+The generated rollup.json is missing parameters required by the latest version of `op-node`, so fix it with the following commands:
+```shell
+mv assets/rollup.json assets/rollup.json.bak
+
+cat assets/rollup.json.bak \
+  | jq -M ".genesis.l1.hash |= $(jq -M .l1StartingBlockTag assets/deploy-config.json)" \
+  | jq -M ".chain_op_config = $(jq -M .config.optimism assets/genesis.json)" > assets/rollup.json
+
+# Check the changes
+cat assets/rollup.json
+
+# Remove backup if no issues
+rm assets/rollup.json.bak
+
 #### Add upgrade timestamps to .env
 Add the block timestamps for L2 upgrades to the `.env` file. These timestamps must be set slightly in the future as `op-node` and `op-geth` must be launched before the specified times. All timestamps can be set to the same value, but due to specification constraints, `0` cannot be used.
 ```dotenv
